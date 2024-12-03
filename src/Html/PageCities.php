@@ -8,7 +8,7 @@ class PageCities extends AbstractPage
     static function table(array $cities)
     {
         echo '<h1>Városok</h1>';
-        self::searchBar();
+        //self::searchBar();
         echo '<table id="cities-table">';
         self::tableHead();
         echo '
@@ -123,12 +123,16 @@ class PageCities extends AbstractPage
         </script>';
     }
 
-    static function dropdown(array $entities){
+    static function dropdown(array $entities, $selectedId = 0){
         echo '<h1>Városok</h1>';
         echo '<form method="post" action="">'; 
-        echo '<select name="id_county" required>'; // Ensure this is 'id_county'
+        echo '<select name="id_county" required>'; 
         foreach ($entities as $entity) {
-            echo "<option value='{$entity['id']}'>{$entity['name']}</option>";
+            $selected = "";
+            if($entity['id'] == $selectedId){
+                $selected = "selected";
+            }
+            echo "<option value='{$entity['id']}' $selected >{$entity['name']}</option>";
         }
         echo '</select>';
         echo '<button type="submit" name="btn-cities">Submit</button>'; 
@@ -140,7 +144,7 @@ class PageCities extends AbstractPage
         <h2>Város szerkesztése</h2>
         <form method='post' action=''>
             <input type='hidden' name='id' value='{$city['id']}'>
-            <input type='text' name='name' value='{$city['city']}' required>
+            <input type='text' name='city' value='{$city['city']}' required>
             <button type='submit' name='btn-update-city'>Mentés</button>
             <button type='submit' name='btn-cancel'>Mégse</button>
         </form>";
@@ -151,7 +155,7 @@ class PageCities extends AbstractPage
         <form name="city-editor" method="post" action="">
         <input type="hidden" id="id" name="id">
         <input type="search" id="name" name="name" placeholder="Város" required>
-        <button type="submit" id="btn-save-city" name="btn-save-county" title="Ment"><i class ="fa fa-save"></i></button>
+        <button type="submit" id="btn-save-city" name="btn-save-city" title="Ment"><i class ="fa fa-save"></i></button>
         <button type="button" id="btn-cancel-city" title="Mégse"><i class="fa fa-times"></i></button>
     </form>';
     }

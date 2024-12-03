@@ -63,7 +63,5 @@ abstract class AbstractPage implements PageInterface
         <br>';
     }
 
-   
-
 
 }
