@@ -1,5 +1,7 @@
 <?php
-
+ /**
+ * @author Nagy Gergely, Király Gábor 
+ **/
 namespace App\RestApiClient;
 
 use App\Interfaces\ClientInterface;

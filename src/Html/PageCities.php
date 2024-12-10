@@ -1,4 +1,7 @@
 <?php
+ /**
+ * @author Nagy Gergely, Király Gábor 
+ **/
 namespace App\Html;
 
 use App\Html\AbstractPage;
@@ -8,7 +11,7 @@ class PageCities extends AbstractPage
     static function table(array $cities)
     {
         echo '<h1>Városok</h1>';
-        //self::searchBar();
+        self::generateAlphabetButtons($cities);
         echo '<table id="cities-table">';
         self::tableHead();
         echo '
@@ -70,6 +73,12 @@ class PageCities extends AbstractPage
             <tr>
                 <th class="id-col">ID</th>
                 <th>Város neve</th>
+                <th>Irányítószám</th>
+                <th style="float: right; display: flex">
+                    Művelet&nbsp;
+                    <button id="myBtn">+</button>';
+        echo'
+                </th>
             </tr>
         </thead>';
     }
@@ -82,8 +91,10 @@ class PageCities extends AbstractPage
             <tr>
                 <td>{$city['id']}</td>
                 <td>{$city['city']}</td>
+                <td>{$city['zip_code']}</td>
                 <td class='flex'>
             <form method='post' action='' class='inline-form'>
+            <input type='hidden' name='id_county' value='{$city['id_county']}' />
                                 <button type='submit'
                                     name='btn-edit-city'
                                     value='{$city['id']}'
@@ -102,19 +113,19 @@ class PageCities extends AbstractPage
         echo '</tbody>';
         echo '<script>
             var modal = document.getElementById("myModal");
-
+ 
             var btn = document.getElementById("myBtn");
-
+ 
             var span = document.getElementsByClassName("close")[0];
-
+ 
             btn.onclick = function() {
               modal.style.display = "block";
             }
-
+ 
             span.onclick = function() {
               modal.style.display = "none";
             }
-
+ 
             window.onclick = function(event) {
               if (event.target == modal) {
                 modal.style.display = "none";
@@ -122,6 +133,7 @@ class PageCities extends AbstractPage
             }
         </script>';
     }
+
 
     static function dropdown(array $entities, $selectedId = 0){
         echo '<h1>Városok</h1>';
@@ -139,12 +151,12 @@ class PageCities extends AbstractPage
         echo '</form>';
     }
 
-    static function editForm($city) {
+    static function editForm(array $city) {
         echo "
         <h2>Város szerkesztése</h2>
         <form method='post' action=''>
-            <input type='hidden' name='id' value='{$city['id']}'>
-            <input type='text' name='city' value='{$city['city']}' required>
+            <input type='hidden' name='id' value='{$city['id']}' />
+            <input type='text' name='city' value='{$city['city']}' required  />
             <button type='submit' name='btn-update-city'>Mentés</button>
             <button type='submit' name='btn-cancel'>Mégse</button>
         </form>";
@@ -154,11 +166,33 @@ class PageCities extends AbstractPage
         echo '
         <form name="city-editor" method="post" action="">
         <input type="hidden" id="id" name="id">
-        <input type="search" id="name" name="name" placeholder="Város" required>
+        <input type="search" id="city" name="city" placeholder="Város" required>
+        <input type="search" id="zip_code" name="zip_code" placeholder="Irányítószám" required>
         <button type="submit" id="btn-save-city" name="btn-save-city" title="Ment"><i class ="fa fa-save"></i></button>
         <button type="button" id="btn-cancel-city" title="Mégse"><i class="fa fa-times"></i></button>
     </form>';
     }
+
+    static function generateAlphabetButtons(array $cities)
+    {
+       
+        $letters = range('A', 'Z');  
+        $availableLetters = array_map(function($city) {
+            return strtoupper(substr($city['city'], 0, 1));
+        }, $cities);
+ 
+        $letters = array_unique($availableLetters);
+        sort($letters);  
+ 
+        echo "<div class='alphabet-buttons'>";
+        foreach ($letters as $letter) {
+            echo "<form method='post' action='' style='display:inline'>
+            <button type='submit' name='btn-alphabet' value='$letter'>$letter</button>
+            </form>";
+        }
+        echo "</div>";
+    }
+
 }
 
 
